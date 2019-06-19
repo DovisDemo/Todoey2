@@ -10,7 +10,7 @@ import UIKit
 
 class TodoListViewController: UITableViewController {
 
-    let itemArray = ["Task1", "Task2", "Task3"]
+    var itemArray = ["Task1", "Task2", "Task3"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,6 +48,35 @@ class TodoListViewController: UITableViewController {
         //TO remove the selection colour
         tableView.deselectRow(at: indexPath, animated: true)
         
+        
+    }
+    
+    // MARK - Add new items method
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        
+        var textField = UITextField()
+        
+        let alert = UIAlertController(title: "Add your item", message: "", preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: "Add item", style: .default) { (action) in
+            //What will happen when you click add item
+            print("success!")
+            print(textField.text!)
+            self.itemArray.append(textField.text!)
+            
+            self.tableView.reloadData()
+        }
+        
+        alert.addTextField { (alertTextField) in
+            alertTextField.placeholder = "Add your item"
+            textField = alertTextField
+            
+        }
+        
+        //Popup addaction
+        alert.addAction(action)
+        
+        present(alert, animated: true, completion: nil)
         
     }
 }
