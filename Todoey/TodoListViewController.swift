@@ -16,6 +16,13 @@ class TodoListViewController: UITableViewController {
     //var itemArray = ["Task1", "Task2", "Task3"]
     
     var itemArray = [Item]()
+    
+    var selectedCategory : Category? {
+        didSet {
+            loadItems()
+        }
+    }
+    
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Item.plist")
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -49,7 +56,7 @@ class TodoListViewController: UITableViewController {
 //        newItem3.title = "Find Dave"
 //        itemArray.append(newItem3)
         
-        loadItems()
+        
         
         // this one is for storing into the user defaults plist file
 //        if let items = defaults.array(forKey: "TodoListArray") as? [Item] {
@@ -144,6 +151,8 @@ class TodoListViewController: UITableViewController {
             
             newItem.done = false
             
+            newItem.parentCategory = self.selectedCategory
+            
             self.itemArray.append(newItem)
             
             
@@ -190,7 +199,7 @@ func saveItems() {
     self.tableView.reloadData()
 }
     //as a default value the Item.fetchRequest() is passed if you want to use a default value when calling this function
-    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest(), predicate: NSPredicate? = nil) {
 
         //code for reading to plist file
         //       if let data = try? Data(contentsOf: dataFilePath!) {
@@ -204,6 +213,22 @@ func saveItems() {
 //     // code for reading data in CoreData model
         
 //        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        
+        //load only items with parent category and which are in that category
+        
+        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+
+        if let additionalPredicate = predicate {
+            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
+        } else {
+            request.predicate = categoryPredicate
+        }
+        
+//        let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, predicate])
+//
+//        request.predicate = compoundPredicate
+        
+        
         do {
            itemArray = try context.fetch(request)
         } catch {
