@@ -80,8 +80,13 @@ class TodoListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+       
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
+        //Mano sudai
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        
+        //Mano sudai
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         //for using user defaylts
         //cell.textLabel?.text = itemArray[indexPath.row]
@@ -119,6 +124,10 @@ class TodoListViewController: UITableViewController {
         
         
         //Realm update method
+        
+        //Mano nesamones
+        
+        
         
         if let item = itemArray?[indexPath.row] {
             do {
@@ -332,8 +341,6 @@ extension TodoListViewController: UISearchBarDelegate {
 //        } catch {
 //            print("Error \(error)")
 //        }
-        
-        tableView.reloadData()
         
         print(searchBar.text!)
         
